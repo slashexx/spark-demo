@@ -82,7 +82,7 @@
       "gridPos": {"x": 12, "y": 4, "w": 12, "h": 9},
       "datasource": {"type": "frser-sqlite-datasource", "uid": "quakes-ds"},
       "targets": [
-        {"refId": "A", "rawQueryText": "SELECT bucket, count FROM mag_buckets ORDER BY bucket", "queryText": "SELECT bucket, count FROM mag_buckets ORDER BY bucket", "timeColumns": [], "queryType": "table"}
+        {"refId": "A", "rawQueryText": "SELECT CAST(bucket AS TEXT) AS bucket, count FROM mag_buckets ORDER BY bucket + 0", "queryText": "SELECT CAST(bucket AS TEXT) AS bucket, count FROM mag_buckets ORDER BY bucket + 0", "timeColumns": [], "queryType": "table"}
       ],
       "options": {"xTickLabelRotation": 0, "showValue": "auto", "stacking": "none", "groupWidth": 0.7, "barWidth": 0.9, "orientation": "auto", "legend": {"showLegend": false, "displayMode": "list", "placement": "bottom"}, "tooltip": {"mode": "single"}}
     },
