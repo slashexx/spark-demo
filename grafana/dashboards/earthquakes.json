@@ -4,109 +4,100 @@
   "tags": ["spark-demo", "usgs"],
   "timezone": "browser",
   "schemaVersion": 39,
-  "version": 1,
+  "version": 2,
   "refresh": "",
   "time": {"from": "now-30d", "to": "now"},
   "panels": [
     {
-      "id": 1,
-      "type": "stat",
-      "title": "Total events",
+      "id": 1, "type": "stat", "title": "Total events",
       "gridPos": {"x": 0, "y": 0, "w": 4, "h": 4},
       "datasource": {"type": "frser-sqlite-datasource", "uid": "quakes-ds"},
-      "targets": [
-        {"refId": "A", "rawQueryText": "SELECT total_events FROM summary", "queryText": "SELECT total_events FROM summary", "timeColumns": [], "queryType": "table"}
-      ],
+      "targets": [{"refId": "A",
+        "rawQueryText": "SELECT COUNT(*) AS total_events FROM events WHERE time_utc >= datetime($__from/1000, 'unixepoch') AND time_utc <= datetime($__to/1000, 'unixepoch')",
+        "queryText":   "SELECT COUNT(*) AS total_events FROM events WHERE time_utc >= datetime($__from/1000, 'unixepoch') AND time_utc <= datetime($__to/1000, 'unixepoch')",
+        "timeColumns": [], "queryType": "table"}],
       "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "colorMode": "value", "graphMode": "none", "textMode": "auto"}
     },
     {
-      "id": 2,
-      "type": "stat",
-      "title": "Max magnitude",
+      "id": 2, "type": "stat", "title": "Max magnitude",
       "gridPos": {"x": 4, "y": 0, "w": 4, "h": 4},
       "datasource": {"type": "frser-sqlite-datasource", "uid": "quakes-ds"},
-      "targets": [
-        {"refId": "A", "rawQueryText": "SELECT max_mag FROM summary", "queryText": "SELECT max_mag FROM summary", "timeColumns": [], "queryType": "table"}
-      ],
+      "targets": [{"refId": "A",
+        "rawQueryText": "SELECT ROUND(MAX(mag), 1) AS max_mag FROM events WHERE time_utc >= datetime($__from/1000, 'unixepoch') AND time_utc <= datetime($__to/1000, 'unixepoch')",
+        "queryText":   "SELECT ROUND(MAX(mag), 1) AS max_mag FROM events WHERE time_utc >= datetime($__from/1000, 'unixepoch') AND time_utc <= datetime($__to/1000, 'unixepoch')",
+        "timeColumns": [], "queryType": "table"}],
       "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "colorMode": "value", "graphMode": "none", "textMode": "auto"},
       "fieldConfig": {"defaults": {"thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}, {"color": "orange", "value": 5}, {"color": "red", "value": 6.5}]}, "unit": "none"}}
     },
     {
-      "id": 3,
-      "type": "stat",
-      "title": "Avg magnitude",
+      "id": 3, "type": "stat", "title": "Avg magnitude",
       "gridPos": {"x": 8, "y": 0, "w": 4, "h": 4},
       "datasource": {"type": "frser-sqlite-datasource", "uid": "quakes-ds"},
-      "targets": [
-        {"refId": "A", "rawQueryText": "SELECT avg_mag FROM summary", "queryText": "SELECT avg_mag FROM summary", "timeColumns": [], "queryType": "table"}
-      ],
+      "targets": [{"refId": "A",
+        "rawQueryText": "SELECT ROUND(AVG(mag), 2) AS avg_mag FROM events WHERE time_utc >= datetime($__from/1000, 'unixepoch') AND time_utc <= datetime($__to/1000, 'unixepoch')",
+        "queryText":   "SELECT ROUND(AVG(mag), 2) AS avg_mag FROM events WHERE time_utc >= datetime($__from/1000, 'unixepoch') AND time_utc <= datetime($__to/1000, 'unixepoch')",
+        "timeColumns": [], "queryType": "table"}],
       "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "colorMode": "value", "graphMode": "none", "textMode": "auto"}
     },
     {
-      "id": 4,
-      "type": "stat",
-      "title": "Avg depth (km)",
+      "id": 4, "type": "stat", "title": "Avg depth (km)",
       "gridPos": {"x": 12, "y": 0, "w": 4, "h": 4},
       "datasource": {"type": "frser-sqlite-datasource", "uid": "quakes-ds"},
-      "targets": [
-        {"refId": "A", "rawQueryText": "SELECT avg_depth_km FROM summary", "queryText": "SELECT avg_depth_km FROM summary", "timeColumns": [], "queryType": "table"}
-      ],
+      "targets": [{"refId": "A",
+        "rawQueryText": "SELECT ROUND(AVG(depth), 1) AS avg_depth_km FROM events WHERE time_utc >= datetime($__from/1000, 'unixepoch') AND time_utc <= datetime($__to/1000, 'unixepoch')",
+        "queryText":   "SELECT ROUND(AVG(depth), 1) AS avg_depth_km FROM events WHERE time_utc >= datetime($__from/1000, 'unixepoch') AND time_utc <= datetime($__to/1000, 'unixepoch')",
+        "timeColumns": [], "queryType": "table"}],
       "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "colorMode": "value", "graphMode": "none", "textMode": "auto"}
     },
     {
-      "id": 5,
-      "type": "stat",
-      "title": "Distinct regions",
+      "id": 5, "type": "stat", "title": "Distinct regions",
       "gridPos": {"x": 16, "y": 0, "w": 4, "h": 4},
       "datasource": {"type": "frser-sqlite-datasource", "uid": "quakes-ds"},
-      "targets": [
-        {"refId": "A", "rawQueryText": "SELECT distinct_regions FROM summary", "queryText": "SELECT distinct_regions FROM summary", "timeColumns": [], "queryType": "table"}
-      ],
+      "targets": [{"refId": "A",
+        "rawQueryText": "SELECT COUNT(DISTINCT CASE WHEN place LIKE '% of %' THEN SUBSTR(place, INSTR(place, ' of ') + 4) ELSE place END) AS distinct_regions FROM events WHERE time_utc >= datetime($__from/1000, 'unixepoch') AND time_utc <= datetime($__to/1000, 'unixepoch')",
+        "queryText":   "SELECT COUNT(DISTINCT CASE WHEN place LIKE '% of %' THEN SUBSTR(place, INSTR(place, ' of ') + 4) ELSE place END) AS distinct_regions FROM events WHERE time_utc >= datetime($__from/1000, 'unixepoch') AND time_utc <= datetime($__to/1000, 'unixepoch')",
+        "timeColumns": [], "queryType": "table"}],
       "options": {"reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "colorMode": "value", "graphMode": "none", "textMode": "auto"}
     },
     {
-      "id": 6,
-      "type": "barchart",
-      "title": "Earthquakes per day",
+      "id": 6, "type": "barchart", "title": "Earthquakes per day",
       "gridPos": {"x": 0, "y": 4, "w": 12, "h": 9},
       "datasource": {"type": "frser-sqlite-datasource", "uid": "quakes-ds"},
-      "targets": [
-        {"refId": "A", "rawQueryText": "SELECT day, count FROM daily_counts ORDER BY day", "queryText": "SELECT day, count FROM daily_counts ORDER BY day", "timeColumns": [], "queryType": "table"}
-      ],
+      "targets": [{"refId": "A",
+        "rawQueryText": "SELECT DATE(time_utc) AS day, COUNT(*) AS count FROM events WHERE time_utc >= datetime($__from/1000, 'unixepoch') AND time_utc <= datetime($__to/1000, 'unixepoch') GROUP BY DATE(time_utc) ORDER BY day",
+        "queryText":   "SELECT DATE(time_utc) AS day, COUNT(*) AS count FROM events WHERE time_utc >= datetime($__from/1000, 'unixepoch') AND time_utc <= datetime($__to/1000, 'unixepoch') GROUP BY DATE(time_utc) ORDER BY day",
+        "timeColumns": [], "queryType": "table"}],
       "options": {"xTickLabelRotation": 45, "xTickLabelSpacing": 0, "showValue": "never", "stacking": "none", "groupWidth": 0.7, "barWidth": 0.9, "orientation": "auto", "legend": {"showLegend": false, "displayMode": "list", "placement": "bottom"}, "tooltip": {"mode": "single"}}
     },
     {
-      "id": 7,
-      "type": "barchart",
-      "title": "Magnitude distribution (integer bucket)",
+      "id": 7, "type": "barchart", "title": "Magnitude distribution (integer bucket)",
       "gridPos": {"x": 12, "y": 4, "w": 12, "h": 9},
       "datasource": {"type": "frser-sqlite-datasource", "uid": "quakes-ds"},
-      "targets": [
-        {"refId": "A", "rawQueryText": "SELECT CAST(bucket AS TEXT) AS bucket, count FROM mag_buckets ORDER BY bucket + 0", "queryText": "SELECT CAST(bucket AS TEXT) AS bucket, count FROM mag_buckets ORDER BY bucket + 0", "timeColumns": [], "queryType": "table"}
-      ],
+      "targets": [{"refId": "A",
+        "rawQueryText": "SELECT CAST(CAST(mag AS INTEGER) AS TEXT) AS bucket, COUNT(*) AS count FROM events WHERE time_utc >= datetime($__from/1000, 'unixepoch') AND time_utc <= datetime($__to/1000, 'unixepoch') AND mag IS NOT NULL GROUP BY CAST(mag AS INTEGER) ORDER BY CAST(mag AS INTEGER)",
+        "queryText":   "SELECT CAST(CAST(mag AS INTEGER) AS TEXT) AS bucket, COUNT(*) AS count FROM events WHERE time_utc >= datetime($__from/1000, 'unixepoch') AND time_utc <= datetime($__to/1000, 'unixepoch') AND mag IS NOT NULL GROUP BY CAST(mag AS INTEGER) ORDER BY CAST(mag AS INTEGER)",
+        "timeColumns": [], "queryType": "table"}],
       "options": {"xTickLabelRotation": 0, "showValue": "auto", "stacking": "none", "groupWidth": 0.7, "barWidth": 0.9, "orientation": "auto", "legend": {"showLegend": false, "displayMode": "list", "placement": "bottom"}, "tooltip": {"mode": "single"}}
     },
     {
-      "id": 8,
-      "type": "table",
-      "title": "Top 10 strongest",
+      "id": 8, "type": "table", "title": "Top 10 strongest",
       "gridPos": {"x": 0, "y": 13, "w": 12, "h": 9},
       "datasource": {"type": "frser-sqlite-datasource", "uid": "quakes-ds"},
-      "targets": [
-        {"refId": "A", "rawQueryText": "SELECT time_utc, mag, depth, place FROM top_strongest ORDER BY mag DESC", "queryText": "SELECT time_utc, mag, depth, place FROM top_strongest ORDER BY mag DESC", "timeColumns": [], "queryType": "table"}
-      ],
+      "targets": [{"refId": "A",
+        "rawQueryText": "SELECT time_utc, mag, depth, place FROM events WHERE time_utc >= datetime($__from/1000, 'unixepoch') AND time_utc <= datetime($__to/1000, 'unixepoch') ORDER BY mag DESC LIMIT 10",
+        "queryText":   "SELECT time_utc, mag, depth, place FROM events WHERE time_utc >= datetime($__from/1000, 'unixepoch') AND time_utc <= datetime($__to/1000, 'unixepoch') ORDER BY mag DESC LIMIT 10",
+        "timeColumns": [], "queryType": "table"}],
       "fieldConfig": {"defaults": {"custom": {"align": "auto", "cellOptions": {"type": "auto"}}}, "overrides": []},
       "options": {"showHeader": true, "cellHeight": "sm", "footer": {"show": false, "countRows": false, "reducer": ["sum"], "fields": ""}}
     },
     {
-      "id": 9,
-      "type": "table",
-      "title": "Top 10 regions by count",
+      "id": 9, "type": "table", "title": "Top 10 regions by count",
       "gridPos": {"x": 12, "y": 13, "w": 12, "h": 9},
       "datasource": {"type": "frser-sqlite-datasource", "uid": "quakes-ds"},
-      "targets": [
-        {"refId": "A", "rawQueryText": "SELECT region, count, max_mag FROM top_places ORDER BY count DESC", "queryText": "SELECT region, count, max_mag FROM top_places ORDER BY count DESC", "timeColumns": [], "queryType": "table"}
-      ],
+      "targets": [{"refId": "A",
+        "rawQueryText": "SELECT CASE WHEN place LIKE '% of %' THEN SUBSTR(place, INSTR(place, ' of ') + 4) ELSE place END AS region, COUNT(*) AS count, ROUND(MAX(mag), 2) AS max_mag FROM events WHERE time_utc >= datetime($__from/1000, 'unixepoch') AND time_utc <= datetime($__to/1000, 'unixepoch') GROUP BY region ORDER BY count DESC LIMIT 10",
+        "queryText":   "SELECT CASE WHEN place LIKE '% of %' THEN SUBSTR(place, INSTR(place, ' of ') + 4) ELSE place END AS region, COUNT(*) AS count, ROUND(MAX(mag), 2) AS max_mag FROM events WHERE time_utc >= datetime($__from/1000, 'unixepoch') AND time_utc <= datetime($__to/1000, 'unixepoch') GROUP BY region ORDER BY count DESC LIMIT 10",
+        "timeColumns": [], "queryType": "table"}],
       "fieldConfig": {"defaults": {"custom": {"align": "auto", "cellOptions": {"type": "auto"}}}, "overrides": []},
       "options": {"showHeader": true, "cellHeight": "sm", "footer": {"show": false, "countRows": false, "reducer": ["sum"], "fields": ""}}
     }
