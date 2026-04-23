@@ -1,0 +1,20 @@
+services:
+  grafana:
+    image: grafana/grafana:10.4.5
+    container_name: spark-demo-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
+      GF_INSTALL_PLUGINS: frser-sqlite-datasource
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - ./output:/var/lib/grafana/data-ro:ro
+      - grafana-data:/var/lib/grafana
+
+volumes:
+  grafana-data:

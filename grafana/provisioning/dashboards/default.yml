@@ -1,0 +1,11 @@
+apiVersion: 1
+providers:
+  - name: spark-demo
+    orgId: 1
+    folder: spark-demo
+    type: file
+    disableDeletion: false
+    allowUiUpdates: true
+    updateIntervalSeconds: 10
+    options:
+      path: /var/lib/grafana/dashboards
